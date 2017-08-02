@@ -8,22 +8,67 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WSM.SynData.Properties
-{
-
-
+namespace WSM.SynData.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int timeloop {
+            get {
+                return ((int)(this["timeloop"]));
+            }
+            set {
+                this["timeloop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"[{""local"":5,""attMachineIp"":""192.168.1.200"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.1.201"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.1.206"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.0.50"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.0.51"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.0.52"",""attMachinePort"":4370,""attMachineType"":1},{""local"":4,""attMachineIp"":""172.16.7.252"",""attMachinePort"":4370,""attMachineType"":3},{""local"":4,""attMachineIp"":""172.16.7.253"",""attMachinePort"":4370,""attMachineType"":3},{""local"":3,""attMachineIp"":""172.17.3.245"",""attMachinePort"":4370,""attMachineType"":1}]")]
+        public string workspaces {
+            get {
+                return ((string)(this["workspaces"]));
+            }
+            set {
+                this["workspaces"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[{\"tsBegin\":\"07:30:00\",\"tsEnd\":\"08:30:00\"},{\"tsBegin\":\"16:30:00\",\"tsEnd\":\"18:00:0" +
+            "0\"}]")]
+        public string timeoff {
+            get {
+                return ((string)(this["timeoff"]));
+            }
+            set {
+                this["timeoff"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://wsm.framgia.vn/api/enroll_checks")]
+        public string api {
+            get {
+                return ((string)(this["api"]));
+            }
+            set {
+                this["api"] = value;
             }
         }
     }

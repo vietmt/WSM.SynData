@@ -5,18 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WSM.SynData"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        ResizeMode="NoResize"
+        Title="MainWindow" Height="600" Width="400">
     <Grid>
         <Grid.ColumnDefinitions>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="10*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
+        <GroupBox Content="Daily" Grid.Row="0"></GroupBox>
         <Button Name="btnStart" Grid.Row="0" Width="80" Height="28" Content="Start" Click="btnStart_Click"></Button>
-        <ScrollViewer Grid.Row="1">
-            <TextBlock Name="txtLogs" HorizontalAlignment="Stretch"></TextBlock>
-        </ScrollViewer>
-        
+        <GroupBox Content="Manualy" Grid.Row="1"></GroupBox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="From" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="20,0,0,0"></Label>
+            <Label Grid.Column="0" Grid.Row="1" Content="To" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="20,0,0,0"></Label>
+            <DatePicker Name="dpFrom" Grid.Column="1" Grid.Row="0" Margin="18"></DatePicker>
+            <DatePicker Name="dpTo" Grid.Column="1" Grid.Row="1" Margin="18"></DatePicker>
+            <Button Name="btnSyn" Grid.ColumnSpan="2" Grid.Row="2" Content="Syn" Width="80" Height="28" Click="btnSyn_Click"></Button>
+        </Grid>
     </Grid>
 </Window>

@@ -1,7 +1,18 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WSM.SynData.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="timeloop" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="workspaces" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[{"local":5,"attMachineIp":"192.168.1.200","attMachinePort":4370,"attMachineType":1},{"local":5,"attMachineIp":"192.168.1.201","attMachinePort":4370,"attMachineType":1},{"local":5,"attMachineIp":"192.168.1.206","attMachinePort":4370,"attMachineType":1},{"local":5,"attMachineIp":"192.168.0.50","attMachinePort":4370,"attMachineType":1},{"local":5,"attMachineIp":"192.168.0.51","attMachinePort":4370,"attMachineType":1},{"local":5,"attMachineIp":"192.168.0.52","attMachinePort":4370,"attMachineType":1},{"local":4,"attMachineIp":"172.16.7.252","attMachinePort":4370,"attMachineType":3},{"local":4,"attMachineIp":"172.16.7.253","attMachinePort":4370,"attMachineType":3},{"local":3,"attMachineIp":"172.17.3.245","attMachinePort":4370,"attMachineType":1}]</Value>
+    </Setting>
+    <Setting Name="timeoff" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[{"tsBegin":"07:30:00","tsEnd":"08:30:00"},{"tsBegin":"16:30:00","tsEnd":"18:00:00"}]</Value>
+    </Setting>
+    <Setting Name="api" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://wsm.framgia.vn/api/enroll_checks</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
