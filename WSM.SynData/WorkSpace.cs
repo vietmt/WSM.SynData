@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
+using Newtonsoft.Json;
 
 namespace WSM.SynData
 {
@@ -29,13 +31,22 @@ namespace WSM.SynData
         public string attMachineIp;
         public int attMachinePort;
         public MachineType attMachineType;
+        [JsonIgnore]
         public List<Attendance> lstAtt;
+        [JsonIgnore]
         public zkemkeeper.CZKEMClass connecter;
+        [JsonIgnore]
         public string ErrorMess;
+        [JsonIgnore]
         public int PushCount;
+        [JsonIgnore]
         public DateTime begin;
+        [JsonIgnore]
         public DateTime end;
-        private string uri = @"http://172.16.0.18:4040/api/enroll_checks";
+        [JsonIgnore]
+        private string uri = SynData.Properties.Settings.Default.api;
+        [JsonIgnore]
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #endregion
         #region Methods
         public WorkSpace(Location lcLocal, string strIP, int iPort, MachineType mtype)
@@ -55,7 +66,7 @@ namespace WSM.SynData
                     connecter.RegEvent(1, 65535);
                 else
                 {
-                    int iError=0;
+                    int iError = 0;
                     connecter.GetLastError(ref iError);
                     ErrorMess = iError.ToString() + " : Can't connect";
                     return false;
@@ -105,7 +116,7 @@ namespace WSM.SynData
                             }
                         }
                     }
-                    if (attMachineType==MachineType.TFT)
+                    if (attMachineType == MachineType.TFT)
                     {
                         while (connecter.SSR_GetGeneralLogData(1, out sdwEnrollNumber, out idwVerifyMode,
                            out idwInOutMode, out idwYear, out idwMonth, out idwDay, out idwHour, out idwMinute, out idwSecond, ref idwWorkcode))
@@ -172,6 +183,126 @@ namespace WSM.SynData
                     ErrorMess = response.StatusCode.ToString();
                     return false;
                 }
+            }
+            catch (Exception ex)
+            {
+
+                ErrorMess = ex.Message;
+                return false;
+            }
+        }
+        public void Run()
+        {
+            try
+            {
+                GetData();
+                SendData();
+                log.Info(DateTime.Now.ToShortTimeString() + " | " + attMachineIp + " | "
+                        + ErrorMess + " | " + PushCount.ToString() + " | " + begin.ToLongTimeString() + " | "
+                        + end.ToLongTimeString() + " | " + (end - begin).TotalSeconds.ToString());
+            }
+            catch (Exception ex)
+            {
+
+                ErrorMess = ex.Message;
+                return;
+            }
+        }
+
+        public bool SynByDate(DateTime dtFrom, DateTime dtTo)
+        {
+            try
+            {
+                if (connecter.Connect_Net(attMachineIp, attMachinePort))
+                    connecter.RegEvent(1, 65535);
+                else
+                {
+                    int iError = 0;
+                    connecter.GetLastError(ref iError);
+                    ErrorMess = iError.ToString() + " : Can't connect";
+                    return false;
+                }
+                connecter.EnableDevice(1, false);
+                begin = DateTime.Now;
+                string sdwEnrollNumber = "";
+                int idwTMachineNumber = 0;
+                int idwEnrollNumber = 0;
+                int idwEMachineNumber = 0;
+                int idwVerifyMode = 0;
+                int idwInOutMode = 0;
+                int idwYear = 0;
+                int idwMonth = 0;
+                int idwDay = 0;
+                int idwHour = 0;
+                int idwMinute = 0;
+                int idwSecond = 0;
+                int idwWorkcode = 0;
+                lstAtt.Clear();
+                if (connecter.ReadGeneralLogData(1))
+                {
+                    if (attMachineType == MachineType.BlackNWhite)
+                    {
+                        while (connecter.GetGeneralLogData(1, ref idwTMachineNumber, ref idwEnrollNumber,
+                       ref idwEMachineNumber, ref idwVerifyMode, ref idwInOutMode, ref idwYear, ref idwMonth,
+                       ref idwDay, ref idwHour, ref idwMinute))
+                        {
+                            DateTime itemtime = new DateTime(idwYear, idwMonth, idwDay, idwHour, idwMinute, 0);
+                            if (itemtime.DayOfYear >= dtFrom.DayOfYear && itemtime.DayOfYear <= dtTo.DayOfYear)
+                            {
+                                Attendance item1 = new Attendance(idwEnrollNumber.ToString(), itemtime, true);
+                                Attendance item2 = new Attendance(idwEnrollNumber.ToString(), itemtime, false);
+                                if (lstAtt.Contains(item1) || lstAtt.Contains(item2))
+                                    continue;
+                                else
+                                    lstAtt.Add(item2);
+                            }
+                        }
+                    }
+                    if (attMachineType == MachineType.TFT)
+                    {
+                        while (connecter.SSR_GetGeneralLogData(1, out sdwEnrollNumber, out idwVerifyMode,
+                           out idwInOutMode, out idwYear, out idwMonth, out idwDay, out idwHour, out idwMinute, out idwSecond, ref idwWorkcode))
+                        {
+                            DateTime itemtime = new DateTime(idwYear, idwMonth, idwDay, idwHour, idwMinute, idwSecond);
+                            if (itemtime.DayOfYear >= dtFrom.DayOfYear && itemtime.DayOfYear <= dtTo.DayOfYear)
+                            {
+                                Attendance item1 = new Attendance(sdwEnrollNumber, itemtime, true);
+                                Attendance item2 = new Attendance(sdwEnrollNumber, itemtime, false);
+                                if (lstAtt.Contains(item1) || lstAtt.Contains(item2))
+                                    continue;
+                                else
+                                    lstAtt.Add(item2);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    ErrorMess = "Can't read data";
+                    return false;
+                }
+                connecter.EnableDevice(1, true);
+                end = DateTime.Now;
+                connecter.Disconnect();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMess = ex.Message;
+                return false;
+            }
+        }
+
+        public bool SynManual(DateTime dtFrom, DateTime dtTo)
+        {
+            try
+            {
+                if (SynByDate(dtFrom, dtTo))
+                {
+                    SendData();
+                    lstAtt.Clear();
+                }
+                return true;
             }
             catch (Exception ex)
             {
