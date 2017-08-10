@@ -69,6 +69,8 @@ namespace WSM.SynData
                     int iError = 0;
                     connecter.GetLastError(ref iError);
                     ErrorMess = iError.ToString() + " : Can't connect";
+                    log.Info(DateTime.Now.ToShortTimeString() + " | " + attMachineIp + " | " +"Connect error" + " | "
+                        + ErrorMess + " | ");
                     return false;
                 }
                 connecter.EnableDevice(1, false);
