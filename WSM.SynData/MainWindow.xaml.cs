@@ -26,16 +26,17 @@ namespace WSM.SynData
     {
         public List<WorkSpace> lstSpace = new List<WorkSpace>();
         public System.Timers.Timer timer;
-        public int iLoopMin = 60;
+        public System.Timers.Timer timerstart;
+        public int iLoopHour = 1;
         public List<OffTime> lsTime = new List<OffTime>();
-        
+
         public MainWindow()
         {
             InitializeComponent();
-            //var json = SynData.Properties.Settings.Default.workspaces;
             var json2 = SynData.Properties.Settings.Default.timeoff;
-            //lstSpace = JsonConvert.DeserializeObject<List<WorkSpace>>(json);
             lsTime = JsonConvert.DeserializeObject<List<OffTime>>(json2);
+            var json = SynData.Properties.Settings.Default.workspaces;
+            lstSpace = JsonConvert.DeserializeObject<List<WorkSpace>>(json);
             //lstSpace.Add(new WorkSpace(Location.Laboratory, "192.168.1.8", 4370, MachineType.BlackNWhite));
             //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.200", 4370, MachineType.BlackNWhite));
             //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.201", 4370, MachineType.BlackNWhite));
@@ -45,15 +46,22 @@ namespace WSM.SynData
             //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.0.52", 4370, MachineType.BlackNWhite));
             //lstSpace.Add(new WorkSpace(Location.Danang, "172.16.7.252", 4370, MachineType.TFT));
             //lstSpace.Add(new WorkSpace(Location.Danang, "172.16.7.253", 4370, MachineType.TFT));
-            lstSpace.Add(new WorkSpace(Location.HCM, "172.17.3.245", 4370, MachineType.BlackNWhite));
+            //lstSpace.Add(new WorkSpace(Location.HCM, "172.17.3.245", 4370, MachineType.BlackNWhite));
             //lsTime.Add(new OffTime(new TimeSpan(7, 30, 0), new TimeSpan(8, 30, 0)));
             //lsTime.Add(new OffTime(new TimeSpan(16, 30, 0), new TimeSpan(18, 0, 0)));
             //lsTime.Add(new OffTime(new TimeSpan(13, 30, 0), new TimeSpan(15, 0, 0)));
             //var json = JsonConvert.SerializeObject(lstSpace);
             //var json2 = JsonConvert.SerializeObject(lsTime);
-            iLoopMin = SynData.Properties.Settings.Default.timeloop;
-            timer = new System.Timers.Timer(iLoopMin * 60 * 1000);
+            iLoopHour = SynData.Properties.Settings.Default.timeloop;
+            timer = new System.Timers.Timer(iLoopHour * 60 * 60 * 1000);
             timer.Elapsed += Timer_Elapsed;
+            List<string> lstCombo = new List<string>();
+            foreach (var item in lstSpace)
+            {
+                lstCombo.Add(item.attMachineIp);
+            }
+
+            cbWorkSpace.ItemsSource = lstCombo;
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -83,14 +91,32 @@ namespace WSM.SynData
         {
             if (timer.Enabled == false)
             {
-                Timer_Elapsed(null, null);
-                timer.Enabled = true;
+                var currenttime = DateTime.Now;
+                var addhour = iLoopHour- ((currenttime.Hour) % iLoopHour);
+                TimeSpan nexttime = new TimeSpan(currenttime.Hour + addhour, 0, 0);
+                timerstart = new System.Timers.Timer((int)(nexttime - currenttime.TimeOfDay).TotalMilliseconds - 10 * 60 * 1000);
+                timerstart.Elapsed += Timerstart_Elapsed;
+                timerstart.Enabled = true;
                 btnStart.Content = "Stop";
+                //Thread.Sleep((int)(nexttime - currenttime.TimeOfDay).TotalMilliseconds-10*60*1000);
+                //timer.Enabled = true;
+                //Timer_Elapsed(null, null);
+                //btnStart.Content = "Stop";
             }
             else
             {
                 timer.Enabled = false;
                 btnStart.Content = "Start";
+            }
+        }
+
+        private void Timerstart_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if(timer.Enabled==false)
+            {
+                timer.Enabled = true;
+                timerstart.Enabled = false;
+                Timer_Elapsed(null, null);
             }
         }
 
@@ -100,11 +126,13 @@ namespace WSM.SynData
             {
                 DateTime? dtFrom = dpFrom.SelectedDate;
                 DateTime? dtTo = dpTo.SelectedDate;
-
-                foreach (var item in lstSpace)
-                {
-                    item.SynManual((DateTime)dtFrom, (DateTime)dtTo);
-                }
+                string ip = (string)cbWorkSpace.SelectedItem;
+                var space = lstSpace.Where(x => x.attMachineIp == ip).First();
+                space.SynManual((DateTime)dtFrom, (DateTime)dtTo);
+                //foreach (var item in lstSpace)
+                //{
+                //    item.SynManual((DateTime)dtFrom, (DateTime)dtTo);
+                //}
             }
             catch (Exception ex)
             {
