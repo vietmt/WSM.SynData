@@ -14,5 +14,8 @@
     <Setting Name="api" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://wsm.framgia.vn/api/enroll_checks</Value>
     </Setting>
+    <Setting Name="timekillthread" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

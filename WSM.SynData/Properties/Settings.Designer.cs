@@ -71,5 +71,17 @@ namespace WSM.SynData.Properties {
                 this["api"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int timekillthread {
+            get {
+                return ((int)(this["timekillthread"]));
+            }
+            set {
+                this["timekillthread"] = value;
+            }
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace WSM.SynData
         public System.Timers.Timer timerstart;
         public int iLoopHour = 1;
         public List<OffTime> lsTime = new List<OffTime>();
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public MainWindow()
         {
@@ -37,7 +38,7 @@ namespace WSM.SynData
             lsTime = JsonConvert.DeserializeObject<List<OffTime>>(json2);
             var json = SynData.Properties.Settings.Default.workspaces;
             lstSpace = JsonConvert.DeserializeObject<List<WorkSpace>>(json);
-            //lstSpace.Add(new WorkSpace(Location.Laboratory, "192.168.1.8", 4370, MachineType.BlackNWhite));
+            //lstSpace.Add(new WorkSpace(Location.Toong, "10.0.30.8", 4370, MachineType.TFT));
             //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.200", 4370, MachineType.BlackNWhite));
             //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.201", 4370, MachineType.BlackNWhite));
             //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.206", 4370, MachineType.BlackNWhite));
@@ -56,11 +57,11 @@ namespace WSM.SynData
             timer = new System.Timers.Timer(iLoopHour * 60 * 60 * 1000);
             timer.Elapsed += Timer_Elapsed;
             List<string> lstCombo = new List<string>();
+            lstCombo.Add("All");
             foreach (var item in lstSpace)
             {
                 lstCombo.Add(item.attMachineIp);
             }
-
             cbWorkSpace.ItemsSource = lstCombo;
         }
 
@@ -77,6 +78,11 @@ namespace WSM.SynData
                 {
                     Thread run = new Thread(item.Run);
                     run.Start();
+                    if (!run.Join(TimeSpan.FromMinutes(SynData.Properties.Settings.Default.timekillthread)))
+                    {
+                        run.Abort();
+                        log.Error(DateTime.Now.ToShortTimeString() + " | " + item.attMachineIp + " | " + "Get Data Timeout");
+                    }
                     Thread.Sleep(10000);
                 }
                 catch (Exception ex)
@@ -127,12 +133,18 @@ namespace WSM.SynData
                 DateTime? dtFrom = dpFrom.SelectedDate;
                 DateTime? dtTo = dpTo.SelectedDate;
                 string ip = (string)cbWorkSpace.SelectedItem;
-                var space = lstSpace.Where(x => x.attMachineIp == ip).First();
-                space.SynManual((DateTime)dtFrom, (DateTime)dtTo);
-                //foreach (var item in lstSpace)
-                //{
-                //    item.SynManual((DateTime)dtFrom, (DateTime)dtTo);
-                //}
+                if (ip=="All")
+                {
+                    foreach (var item in lstSpace)
+                    {
+                        item.SynManual((DateTime)dtFrom, (DateTime)dtTo);
+                    }
+                }
+                else
+                {
+                    var space = lstSpace.Where(x => x.attMachineIp == ip).First();
+                    space.SynManual((DateTime)dtFrom, (DateTime)dtTo);
+                }
             }
             catch (Exception ex)
             {
