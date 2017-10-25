@@ -69,7 +69,7 @@ namespace WSM.SynData
                     int iError = 0;
                     connecter.GetLastError(ref iError);
                     ErrorMess = iError.ToString() + " : Can't connect";
-                    log.Info(DateTime.Now.ToShortTimeString() + " | " + attMachineIp + " | " +"Connect error" + " | "
+                    log.Error(DateTime.Now.ToShortTimeString() + " | " + attMachineIp + " | " +"Connect error" + " | "
                         + ErrorMess + " | ");
                     return false;
                 }
@@ -222,6 +222,9 @@ namespace WSM.SynData
                     int iError = 0;
                     connecter.GetLastError(ref iError);
                     ErrorMess = iError.ToString() + " : Can't connect";
+                    log.Error(DateTime.Now.ToShortTimeString() + " | " + attMachineIp + " | "
+                        + ErrorMess + " | " + PushCount.ToString() + " | " + begin.ToLongTimeString() + " | "
+                        + end.ToLongTimeString() + " | " + (end - begin).TotalSeconds.ToString());
                     return false;
                 }
                 connecter.EnableDevice(1, false);
@@ -280,12 +283,18 @@ namespace WSM.SynData
                 }
                 else
                 {
+                    connecter.EnableDevice(1, true);
+                    end = DateTime.Now;
+                    connecter.Disconnect();
                     ErrorMess = "Can't read data";
                     return false;
                 }
                 connecter.EnableDevice(1, true);
                 end = DateTime.Now;
                 connecter.Disconnect();
+                log.Info(DateTime.Now.ToShortTimeString() + " | " + attMachineIp + " | "
+                        + ErrorMess + " | " + PushCount.ToString() + " | " + begin.ToLongTimeString() + " | "
+                        + end.ToLongTimeString() + " | " + (end - begin).TotalSeconds.ToString());
                 return true;
             }
             catch (Exception ex)
