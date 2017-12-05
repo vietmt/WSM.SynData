@@ -58,6 +58,7 @@ namespace WSM.SynData
             attMachinePort = iPort;
             attMachineType = mtype;
             connecter = new zkemkeeper.CZKEMClass();
+            lstAtt = new List<Attendance>();
         }
         public bool GetData()
         {

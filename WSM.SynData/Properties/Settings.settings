@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="timeloop" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="timeoff" Type="System.String" Scope="User">
       <Value Profile="(Default)">[{"tsBegin":"07:30:00","tsEnd":"08:30:00"},{"tsBegin":"16:30:00","tsEnd":"18:00:00"}]</Value>
