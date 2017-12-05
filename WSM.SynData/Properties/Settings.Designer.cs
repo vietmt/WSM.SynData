@@ -25,25 +25,13 @@ namespace WSM.SynData.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int timeloop {
             get {
                 return ((int)(this["timeloop"]));
             }
             set {
                 this["timeloop"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"[{""local"":5,""attMachineIp"":""192.168.1.200"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.1.201"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.1.206"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.0.50"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.0.51"",""attMachinePort"":4370,""attMachineType"":1},{""local"":5,""attMachineIp"":""192.168.0.52"",""attMachinePort"":4370,""attMachineType"":1},{""local"":4,""attMachineIp"":""172.16.7.252"",""attMachinePort"":4370,""attMachineType"":3},{""local"":4,""attMachineIp"":""172.16.7.253"",""attMachinePort"":4370,""attMachineType"":3},{""local"":3,""attMachineIp"":""172.17.3.245"",""attMachinePort"":4370,""attMachineType"":1}]")]
-        public string workspaces {
-            get {
-                return ((string)(this["workspaces"]));
-            }
-            set {
-                this["workspaces"] = value;
             }
         }
         
@@ -81,6 +69,19 @@ namespace WSM.SynData.Properties {
             }
             set {
                 this["timekillthread"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[{\"local\":2,\"attMachineIp\":\"192.168.1.8\",\"attMachinePort\":4370,\"attMachineType\":1" +
+            ",\"WorkingTime\":{\"tsBegin\":\"07:45:00\",\"tsEnd\":\"16:45:00\"},\"lstEnrollAdv\":[\"2\"]}]")]
+        public string workspaces {
+            get {
+                return ((string)(this["workspaces"]));
+            }
+            set {
+                this["workspaces"] = value;
             }
         }
     }

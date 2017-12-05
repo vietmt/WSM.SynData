@@ -31,6 +31,8 @@ namespace WSM.SynData
         public string attMachineIp;
         public int attMachinePort;
         public MachineType attMachineType;
+        public OffTime WorkingTime;
+        public List<string> lstEnrollAdv = new List<string>();
         [JsonIgnore]
         public List<Attendance> lstAtt;
         [JsonIgnore]
@@ -56,7 +58,6 @@ namespace WSM.SynData
             attMachinePort = iPort;
             attMachineType = mtype;
             connecter = new zkemkeeper.CZKEMClass();
-            lstAtt = new List<Attendance>();
         }
         public bool GetData()
         {
@@ -152,6 +153,40 @@ namespace WSM.SynData
                 return false;
             }
         }
+        public bool ValidateData()
+        {
+            try
+            {
+                foreach (var enr in lstEnrollAdv)
+                {
+                    var enrBegin = lstAtt.Where(x => x.EnrollNumber == enr).Min(x => x.date);
+                    var enrEnd = lstAtt.Where(x => x.EnrollNumber == enr).Max(x => x.date);
+                    if (enrBegin.TimeOfDay > WorkingTime.tsBegin)
+                    {
+                        DateTime itemtime = new DateTime(enrBegin.Year, enrBegin.Month, enrBegin.Day, 0, 0, 0) + WorkingTime.tsBegin;
+                        Attendance item1 = new Attendance(enr, itemtime, false);
+                        var lastAtt = lstAtt.Where(x => x.date.TimeOfDay > WorkingTime.tsBegin).OrderBy(x=>x.date).First();
+                        lstAtt.Insert(lstAtt.IndexOf(lastAtt), item1);
+                    }
+                    if (enrEnd.TimeOfDay < WorkingTime.tsEnd)
+                    {
+                        if (enrEnd.DayOfYear < DateTime.Now.DayOfYear || (enrEnd.DayOfYear == DateTime.Now.DayOfYear && DateTime.Now.TimeOfDay > WorkingTime.tsEnd))
+                        {
+                            DateTime itemtime = new DateTime(enrBegin.Year, enrBegin.Month, enrBegin.Day, 0, 0, 0) + WorkingTime.tsEnd;
+                            Attendance item1 = new Attendance(enr, itemtime, false);
+                            var lastAtt = lstAtt.Where(x => x.date.TimeOfDay > WorkingTime.tsEnd).OrderBy(x => x.date).First();
+                            lstAtt.Insert(lstAtt.IndexOf(lastAtt), item1);
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                return false;
+            }
+        }
         public bool SendData()
         {
             try
@@ -175,6 +210,7 @@ namespace WSM.SynData
                 var response = client.PostAsync(uri, stringContent).Result;
                 if (response.IsSuccessStatusCode)
                 {
+                    //log.Info(strJSON);
                     ErrorMess = response.StatusCode.ToString();
                     foreach (var item in lstAtt.Where(x => x.pushed == false))
                         item.pushed = true;
@@ -198,6 +234,7 @@ namespace WSM.SynData
             try
             {
                 GetData();
+                ValidateData();
                 SendData();
                 log.Info(DateTime.Now.ToShortTimeString() + " | " + attMachineIp + " | "
                         + ErrorMess + " | " + PushCount.ToString() + " | " + begin.ToLongTimeString() + " | "
@@ -310,6 +347,7 @@ namespace WSM.SynData
             {
                 if (SynByDate(dtFrom, dtTo))
                 {
+                    ValidateData();
                     SendData();
                     lstAtt.Clear();
                 }

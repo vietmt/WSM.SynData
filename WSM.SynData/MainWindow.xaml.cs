@@ -38,21 +38,6 @@ namespace WSM.SynData
             lsTime = JsonConvert.DeserializeObject<List<OffTime>>(json2);
             var json = SynData.Properties.Settings.Default.workspaces;
             lstSpace = JsonConvert.DeserializeObject<List<WorkSpace>>(json);
-            //lstSpace.Add(new WorkSpace(Location.Toong, "10.0.30.8", 4370, MachineType.TFT));
-            //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.200", 4370, MachineType.BlackNWhite));
-            //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.201", 4370, MachineType.BlackNWhite));
-            //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.1.206", 4370, MachineType.BlackNWhite));
-            //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.0.50", 4370, MachineType.BlackNWhite));
-            //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.0.51", 4370, MachineType.BlackNWhite));
-            //lstSpace.Add(new WorkSpace(Location.Keangnam, "192.168.0.52", 4370, MachineType.BlackNWhite));
-            //lstSpace.Add(new WorkSpace(Location.Danang, "172.16.7.252", 4370, MachineType.TFT));
-            //lstSpace.Add(new WorkSpace(Location.Danang, "172.16.7.253", 4370, MachineType.TFT));
-            //lstSpace.Add(new WorkSpace(Location.HCM, "172.17.3.245", 4370, MachineType.BlackNWhite));
-            //lsTime.Add(new OffTime(new TimeSpan(7, 30, 0), new TimeSpan(8, 30, 0)));
-            //lsTime.Add(new OffTime(new TimeSpan(16, 30, 0), new TimeSpan(18, 0, 0)));
-            //lsTime.Add(new OffTime(new TimeSpan(13, 30, 0), new TimeSpan(15, 0, 0)));
-            //var json = JsonConvert.SerializeObject(lstSpace);
-            //var json2 = JsonConvert.SerializeObject(lsTime);
             iLoopHour = SynData.Properties.Settings.Default.timeloop;
             timer = new System.Timers.Timer(iLoopHour * 60 * 60 * 1000);
             timer.Elapsed += Timer_Elapsed;
@@ -104,10 +89,6 @@ namespace WSM.SynData
                 timerstart.Elapsed += Timerstart_Elapsed;
                 timerstart.Enabled = true;
                 btnStart.Content = "Stop";
-                //Thread.Sleep((int)(nexttime - currenttime.TimeOfDay).TotalMilliseconds-10*60*1000);
-                //timer.Enabled = true;
-                //Timer_Elapsed(null, null);
-                //btnStart.Content = "Stop";
             }
             else
             {
