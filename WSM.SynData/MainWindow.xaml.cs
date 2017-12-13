@@ -61,7 +61,7 @@ namespace WSM.SynData
             {
                 try
                 {
-                    Thread run = new Thread(item.Run);
+                    Thread run = new Thread(item.SynDaily);
                     run.Start();
                     if (!run.Join(TimeSpan.FromMinutes(SynData.Properties.Settings.Default.timekillthread)))
                     {
@@ -112,7 +112,7 @@ namespace WSM.SynData
             try
             {
                 DateTime? dtFrom = dpFrom.SelectedDate;
-                DateTime? dtTo = dpTo.SelectedDate;
+                DateTime? dtTo = dpTo.SelectedDate + new TimeSpan(24,0,0);
                 string ip = (string)cbWorkSpace.SelectedItem;
                 if (ip=="All")
                 {
@@ -129,8 +129,7 @@ namespace WSM.SynData
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                log.Error(ex.Message);
             }
         }
     }
