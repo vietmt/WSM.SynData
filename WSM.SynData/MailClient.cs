@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace WSM.SynData
 {
@@ -15,26 +16,43 @@ namespace WSM.SynData
         public string password;
         public int serverport;
         public bool issshserver;
+        public string receiver;
+        [JsonIgnore]
         public string from;
+        [JsonIgnore]
         public string to;
+        [JsonIgnore]
         public string title;
+        [JsonIgnore]
         public string content;
         #endregion
         #region Methods
-        public MailClient(string strMailServer, int iServerPort, bool isSSHServer, string strUserName, string strPassword)
+        public MailClient()
+        {
+            // Debug code
+            mailserver = "smtp.gmail.com";
+            serverport = 587;
+            issshserver = true;
+            username = "viet456@gmail.com";
+            password = "LetitGo146";
+            receiver = "viet456@gmail.com,mtviet@gmail.com,mai.tuan.viet@framgia.com";
+            // Debug code
+        }
+        public MailClient(string strMailServer, int iServerPort, bool isSSHServer, string strUserName, string strPassword, string strReceiver)
         {
             mailserver = strMailServer;
             serverport = iServerPort;
             issshserver = isSSHServer;
             username = strUserName;
             password = strPassword;
+            receiver = strReceiver;
         }
-        public bool SendMail(string strFrom, string strTo, string strTitle, string strContent)
+        public bool SendMail(string strTitle, string strContent)
         {
             try
             {
-                from = strFrom;
-                to = strTo;
+                from = username;
+                to = receiver;
                 title = strTitle;
                 content = strContent;
                 MailMessage mail = new MailMessage();

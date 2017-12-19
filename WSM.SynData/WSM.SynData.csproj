@@ -61,6 +61,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Attendance.cs" />
+    <Compile Include="EncrypData.cs" />
     <Compile Include="MailClient.cs" />
     <Compile Include="OffTime.cs" />
     <Compile Include="WorkSpace.cs" />

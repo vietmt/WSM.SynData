@@ -84,5 +84,19 @@ namespace WSM.SynData.Properties {
                 this["workspaces"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"mailserver\":\"smtp.gmail.com\",\"username\":\"viet456@gmail.com\",\"password\":\"LetitGo" +
+            "146\",\"serverport\":587,\"issshserver\":true,\"receiver\":\"viet456@gmail.com,mtviet@gm" +
+            "ail.com,mai.tuan.viet@framgia.com\"}")]
+        public string mailreport {
+            get {
+                return ((string)(this["mailreport"]));
+            }
+            set {
+                this["mailreport"] = value;
+            }
+        }
     }
 }

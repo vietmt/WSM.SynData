@@ -17,5 +17,8 @@
     <Setting Name="workspaces" Type="System.String" Scope="User">
       <Value Profile="(Default)">[{"local":2,"attMachineIp":"192.168.1.8","attMachinePort":4370,"attMachineType":1,"WorkingTime":{"tsBegin":"07:45:00","tsEnd":"16:45:00"},"lstEnrollAdv":["2"]}]</Value>
     </Setting>
+    <Setting Name="mailreport" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"mailserver":"smtp.gmail.com","username":"viet456@gmail.com","password":"LetitGo146","serverport":587,"issshserver":true,"receiver":"viet456@gmail.com,mtviet@gmail.com,mai.tuan.viet@framgia.com"}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
