@@ -34,10 +34,10 @@ namespace WSM.SynData
         public MainWindow()
         {
             InitializeComponent();
-            var json2 = SynData.Properties.Settings.Default.timeoff;
-            lsTime = JsonConvert.DeserializeObject<List<OffTime>>(json2);
-            var json = SynData.Properties.Settings.Default.workspaces;
-            lstSpace = JsonConvert.DeserializeObject<List<WorkSpace>>(json);
+            MailClient mail = JsonConvert.DeserializeObject<MailClient>(SynData.Properties.Settings.Default.mailreport);
+            mail.password = EncrypData.DecryptAES(mail.password);
+            lsTime = JsonConvert.DeserializeObject<List<OffTime>>(SynData.Properties.Settings.Default.timeoff);
+            lstSpace = JsonConvert.DeserializeObject<List<WorkSpace>>(SynData.Properties.Settings.Default.workspaces);
             iLoopHour = SynData.Properties.Settings.Default.timeloop;
             timer = new System.Timers.Timer(iLoopHour * 60 * 60 * 1000);
             timer.Elapsed += Timer_Elapsed;
@@ -46,6 +46,7 @@ namespace WSM.SynData
             foreach (var item in lstSpace)
             {
                 lstCombo.Add(item.attMachineIp);
+                item.reportmail = mail;
             }
             cbWorkSpace.ItemsSource = lstCombo;
         }
@@ -112,9 +113,9 @@ namespace WSM.SynData
             try
             {
                 DateTime? dtFrom = dpFrom.SelectedDate;
-                DateTime? dtTo = dpTo.SelectedDate + new TimeSpan(24,0,0);
+                DateTime? dtTo = dpTo.SelectedDate + new TimeSpan(24, 0, 0);
                 string ip = (string)cbWorkSpace.SelectedItem;
-                if (ip=="All")
+                if (ip == "All")
                 {
                     foreach (var item in lstSpace)
                     {

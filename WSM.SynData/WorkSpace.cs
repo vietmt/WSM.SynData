@@ -46,6 +46,8 @@ namespace WSM.SynData
         [JsonIgnore]
         public DateTime end;
         [JsonIgnore]
+        public MailClient reportmail;
+        [JsonIgnore]
         private string uri = SynData.Properties.Settings.Default.api;
         [JsonIgnore]
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -59,6 +61,7 @@ namespace WSM.SynData
             attMachineType = mtype;
             connecter = new zkemkeeper.CZKEMClass();
             lstAtt = new List<Attendance>();
+            //reportmail = new MailClient();
         }
         private bool ConnectDevice()
         {
@@ -75,7 +78,9 @@ namespace WSM.SynData
                 {
                     int iError = 0;
                     connecter.GetLastError(ref iError);
-                    log.Error("ConnectDevice | " + attMachineIp + " | " + ErrorMess);
+                    ErrorMess = "ConnectDevice | " + attMachineIp + " | Errorcode = " + iError + " | Cannot connect to device";
+                    log.Error(ErrorMess);
+                    reportmail.SendMail("WSMSyn connect error | " + DateTime.Now.ToString(), ErrorMess);
                     return false;
                 }
             }
